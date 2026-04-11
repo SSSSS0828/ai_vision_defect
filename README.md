@@ -8,9 +8,9 @@
 
 > 将截图放入 `docs/screenshots/` 并更新下方路径。
 
-| 主视图（ROI 标注） | 统计面板 |
+| 主视图（ROI 标注）|
 |---|---|
-| ![主视图](docs/screenshots/main.png) | ![统计](docs/screenshots/stats.png) |
+| ![主视图](docs/screenshots/main.png) |
 
 ---
 
