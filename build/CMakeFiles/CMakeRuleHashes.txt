@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+79a6168997cf778831b084f0c2d80484 AIVisionDefect_autogen/timestamp
+893abcbf5303d45b862b554e4b13d0b5 CMakeFiles/AIVisionDefect_autogen
+893abcbf5303d45b862b554e4b13d0b5 CMakeFiles/AIVisionDefect_autogen_timestamp_deps
