@@ -1,9 +1,0 @@
-/home/xun/ai-vision-defect/ai_vision_defect/build/CMakeFiles/AIVisionDefect.dir
-/home/xun/ai-vision-defect/ai_vision_defect/build/CMakeFiles/edit_cache.dir
-/home/xun/ai-vision-defect/ai_vision_defect/build/CMakeFiles/rebuild_cache.dir
-/home/xun/ai-vision-defect/ai_vision_defect/build/CMakeFiles/list_install_components.dir
-/home/xun/ai-vision-defect/ai_vision_defect/build/CMakeFiles/install.dir
-/home/xun/ai-vision-defect/ai_vision_defect/build/CMakeFiles/install/local.dir
-/home/xun/ai-vision-defect/ai_vision_defect/build/CMakeFiles/install/strip.dir
-/home/xun/ai-vision-defect/ai_vision_defect/build/CMakeFiles/AIVisionDefect_autogen_timestamp_deps.dir
-/home/xun/ai-vision-defect/ai_vision_defect/build/CMakeFiles/AIVisionDefect_autogen.dir
