@@ -6,7 +6,7 @@
 
 ## 界面预览
 
-![主视图](docs/screenshots/main.png) |
+![主视图](docs/screenshots/main.png) 
 
 ---
 
