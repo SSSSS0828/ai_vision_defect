@@ -6,8 +6,6 @@
 
 ## 界面预览
 
-> 将截图放入 `docs/screenshots/` 并更新下方路径。
-
 | 主视图（ROI 标注）|
 |---|---|
 | ![主视图](docs/screenshots/main.png) |
