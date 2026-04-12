@@ -1,22 +1,5 @@
 #pragma once
 
-/*
- * FramePool — Object pool for pre-allocated image frame buffers.
- *
- * Rationale:
- *   Industrial cameras produce frames at high frequency (30-120 fps).
- *   Allocating / deallocating large cv::Mat buffers on every frame triggers
- *   heap fragmentation and adds latency spikes.  The pool pre-allocates N
- *   buffers of (width x height x channels) bytes and recycles them via a
- *   mutex-protected stack with a condition_variable for blocking acquire().
- *
- * Zero-copy contract:
- *   acquire() returns a FramePtr whose cv::Mat points directly into the
- *   pre-allocated buffer.  The shared_ptr carries a custom deleter that calls
- *   returnBuffer() when the last owner releases the frame — no explicit
- *   release() call is ever required by callers.
- */
-
 #include "Types.h"
 
 #include <vector>
@@ -26,35 +9,36 @@
 #include <memory>
 #include <cstdint>
 
+// 对象池 解决高频场景下，频繁动态分配和释放大型 cv::Mat 内存导致的堆碎片化和延迟抖动问题
 class FramePool {
 public:
-    FramePool(int capacity, int width, int height, int cvType = CV_8UC3);
+    FramePool(int capacity, int width, int height, int cvType = CV_8UC3);   // 参数为 对象池容量，宽，高，数据类型 压入m_free
     ~FramePool();
 
-    // Block until a buffer is available, return zero-copy FramePtr.
+    // 阻塞式获取对象
     FramePtr acquire();
 
-    // Non-blocking; returns nullptr if pool is exhausted.
+    // 非阻塞式获取对象
     FramePtr tryAcquire();
 
+    // 监控 池状态
     int capacity()  const { return m_capacity; }
     int available() const;
 
 private:
-    // Called with lock held — pops a buffer, builds FramePtr with custom deleter.
+    
     FramePtr makeFrame(std::unique_lock<std::mutex>& lk);
 
-    // Called by the custom deleter (lock-free push + notify).
     void returnBuffer(uint8_t* buf);
 
-    int  m_capacity;
-    int  m_width;
-    int  m_height;
-    int  m_cvType;
-    int  m_elemSize;
+    int  m_capacity;        // 池容量
+    int  m_width;           // 宽
+    int  m_height;          // 高   
+    int  m_cvType;          // 数据类型
+    int  m_elemSize;        // 数据类型大小
 
-    std::vector<std::vector<uint8_t>> m_storage;   // backing memory
-    std::stack<uint8_t*>              m_free;       // available buffer pointers
+    std::vector<std::vector<uint8_t>> m_storage;   
+    std::stack<uint8_t*>              m_free;       
     mutable std::mutex                m_mutex;
     std::condition_variable           m_cv;
 

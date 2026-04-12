@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget* parent)
     // 预分配帧池：8 帧，1920×1080，BGR
     m_pool = std::make_shared<FramePool>(8, 1920, 1080, CV_8UC3);
 
-    // 尝试加载默认模型（找不到也没关系，进入无推理模式）
+    // 尝试加载默认模型（找不到进入无推理模式）
     QString defaultModel = QCoreApplication::applicationDirPath()
                            + "/models/defect_yolov5s.onnx";
     tryLoadEngine(defaultModel);
@@ -44,6 +44,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::buildUI() {
+    // 水平分割布局
     auto* splitter = new QSplitter(Qt::Horizontal, this);
     m_renderer   = new ImageRenderer(this);
     m_statsPanel = new StatisticsPanel(this);
@@ -79,7 +80,7 @@ void MainWindow::buildToolbar() {
     connect(actFit,     &QAction::triggered, this, &MainWindow::onFitView);
 }
 
-// ─── 尝试加载推理引擎（失败时静默降级为纯显示模式）─────────────────────────
+// ─── 尝试加载推理引擎（失败时降级为纯显示模式）─────────────────────────
 void MainWindow::tryLoadEngine(const QString& modelPath) {
     if (!QFile::exists(modelPath)) {
         statusBar()->showMessage("无模型 — 仅显示模式（可通过 Load Model 加载）");
@@ -89,13 +90,18 @@ void MainWindow::tryLoadEngine(const QString& modelPath) {
     YoloDetector::Config cfg;
     cfg.modelPath   = modelPath.toStdString();
     cfg.classNames  = {"scratch", "crack", "dent", "stain", "missing"};
+    // 检测阈值
     cfg.confThreshold = 0.45f;
     cfg.nmsThreshold  = 0.45f;
 
     try {
+        // 创建推理引擎检测器实例
         auto det = std::make_unique<YoloDetector>(cfg);
+        // 传递检测器到推理引擎实例
         m_engine = std::make_shared<InferenceEngine>(std::move(det));
+        // 启动推理
         m_engine->start();
+        // 绑定信号
         wireSignals();
         statusBar()->showMessage("模型已加载: " + modelPath);
     } catch (const std::exception& e) {
@@ -104,11 +110,14 @@ void MainWindow::tryLoadEngine(const QString& modelPath) {
 }
 
 void MainWindow::wireSignals() {
+    // 检测是否有推理引擎
     if (!m_engine) return;
-    // 避免重复连接
+    // 断开全部连接 避免重复连接
     disconnect(m_engine.get(), nullptr, this, nullptr);
+    // 当推理完成并有新真可用时触发
     connect(m_engine.get(), &InferenceEngine::frameReady,
             this, &MainWindow::onFrameReady, Qt::QueuedConnection);
+    // 当推理发生错误时触发
     connect(m_engine.get(), &InferenceEngine::inferenceError,
             this, &MainWindow::onPipelineError, Qt::QueuedConnection);
 }
