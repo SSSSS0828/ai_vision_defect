@@ -111,19 +111,10 @@ sudo apt install cmake build-essential \
     libopencv-dev
 ```
 
-**macOS（Homebrew）**
-```bash
-brew install cmake qt@5 opencv
-export PATH="/usr/local/opt/qt@5/bin:$PATH"
-```
-
-**Windows**
-通过 Qt 官方安装器安装 Qt 5，通过 vcpkg 或官方二进制包安装 OpenCV，并将两者路径加入 `CMAKE_PREFIX_PATH`。
-
 ### 2. 克隆与编译
 
 ```bash
-git clone https://github.com/your-username/ai-vision-defect.git
+git clone https://github.com/SSSSS0828/ai_vision_defect.git
 cd ai-vision-defect
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
@@ -210,7 +201,7 @@ g++ -std=c++11 tests/test_pool_pipeline.cpp src/FramePool.cpp \
 ./test_runner
 ```
 
-预期输出：
+输出：
 ```
 === FramePool Tests ===
   [PASS] pool_capacity_and_return
@@ -259,20 +250,6 @@ grep "definitely lost\|indirectly lost" valgrind-out.txt
 | 零拷贝渲染单次耗时（1080p） | < 2 ms CPU 时间 |
 
 性能数据通过 `perf stat` 与 Qt 内置 `QElapsedTimer` 采集。
-
----
-
-## 参与贡献
-
-1. Fork 本仓库
-2. 创建功能分支：`git checkout -b feature/your-feature`
-3. 使用约定式提交：`git commit -m "feat: 新增 ROI 导出为 CSV"`
-4. 推送并发起 Pull Request
-
-提交前请运行测试并通过静态检查：
-```bash
-cppcheck --enable=all --std=c++11 -I include src/
-```
 
 ---
 
